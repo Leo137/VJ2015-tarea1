@@ -1,0 +1,87 @@
+<!doctype html> 
+<html lang="en"> 
+<head>
+    <title>VJ2015-tarea1</title>
+    <meta charset="utf-8" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="user-scalable=0, initial-scale=1, minimum-scale=1, maximum-scale=1, width=device-width, minimal-ui=1">
+    <!-- phaser !-->
+	<script type="text/javascript" src="phaser/build/phaser.min.js"></script>
+    <!-- estilo !-->
+    <style type="text/css">
+        body{
+                margin:0;
+                padding:0;
+                overflow:hidden;
+                background-color:#333;
+            }
+            #game{
+                margin:0 auto;
+            }
+    </style>
+</head>
+<body>
+    <div id="game"></div>
+    <script type="text/javascript">
+        var screenOrientation = screen.width > screen.height ? 90 : 0;
+        window.onresize =  function(){
+            screenOrientation = screen.width > screen.height ? 90 : 0;
+        };
+        var isLandscape;
+        var isLandscapeLittle = false;
+        if(screenOrientation == 90){
+            isLandscape = true;
+        }
+        else{
+            isLandscape = false;
+        }
+        var w,h;
+        if(isLandscape){
+
+            if(screen.height <= 400){
+                w = 592;
+                h = 333;
+                isLandscapeLittle =true;
+            }
+            else{
+                w = 768;
+                h = 432;
+            }
+        }
+        else{
+            w = 400,
+            h = 600;
+        }
+        var game = new Phaser.Game(w, h, Phaser.AUTO ,'phaser-example');
+
+        function restartGame(){
+            game.state.restart();
+        }
+        BasicGame = {};
+    </script>
+    <!-- classes !-->
+    <script type="text/javascript" src="classes/menuBackground.js"></script>
+    <script type="text/javascript" src="classes/pieProgress.js"></script>
+    <script type="text/javascript" src="classes/donutLoaderPie.js"></script>
+    <script type="text/javascript" src="classes/localizableStrings.js"></script>
+    <script type="text/javascript" src="classes/gameVarsData.js"></script>
+    <script type="text/javascript" src="classes/saveManager.js"></script>
+    <!-- screens !-->
+    <script type="text/javascript" src="screens/premenu.js"></script>
+    <script type="text/javascript" src="screens/menu.js"></script>
+    <script type="text/javascript" src="screens/game.js"></script>
+    <script type="text/javascript" src="screens/gameover.js"></script>
+
+    <script type="text/javascript">
+        // añadir pantallas
+        game.state.add('PreMenu', BasicGame.PreMenu);
+        game.state.add('Menu',BasicGame.Menu);
+        game.state.add('Game',BasicGame.Game);
+        game.state.add('Gameover',BasicGame.Gameover);
+        // lanzar premenu (load de assets basicos)
+        game.state.start('PreMenu');
+        game.scale = Phaser.ScaleManager.SHOW_ALL;
+    </script>
+</body>
+</html>     

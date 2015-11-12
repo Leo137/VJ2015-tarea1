@@ -1,0 +1,18 @@
+﻿{
+	"hola": "Hola!!!",
+	"chao": "Chao!!!",
+	
+	"general-loadingtext": "Cargando...",
+	"general-wave": "Ronda",
+	
+	"menu-startgametext": "Empezar juego!",
+	"menu-continuegametext": "Continuar juego",
+	"menu-credits": "Creditos",
+
+	"game-gameover": "Juego Terminado!",
+    "game-nextwaveboxtext": "Siguiente ronda:",
+	"game-paused": "Juego pausado",
+	
+	"gameover-results": "Resultados",
+	"gameover-tomenu": "Ir al menu"
+}
