@@ -4,7 +4,7 @@ BasicGame.Game.prototype = {
 
 loadUpdate : function(){
     if(this.pieProgressPie && this.pieProgressPie.alive){
-    	this.progress = (tilecounter/tileTotalCount) * 0.20 + tileprogress * 0.20 + (game.load.progress/100.0) * 0.6;
+    	this.progress =  (game.load.progress/100.0);
     	if(this.progress != this.progress_prev){
     	    this.progress_prev = this.progress;
     	    pieTween = game.add.tween(this.pieProgressPie);
@@ -23,8 +23,16 @@ preload: function() {
     game.time.advancedTiming = true;
 
     // Load things..
+    game.load.spritesheet('dog', 'assets/sprites/player.png', 64, 64);
+    game.load.image('mapa', 'assets/tiles/tilemap.png');
+    game.load.tilemap('level_1', 'assets/maps/1.json', null, Phaser.Tilemap.TILED_JSON);
+
+
 },
 create: function() {
+
+    this.pieProgressPie.DestroyPie();
+    this.pieProgressPie = null;
 
     // Create things...
     this.gameTestText = game.add.text(game.width/2, game.height/2 - game.height/3, "Escena de juego :p :p", { font: "bold 34px Arial", fill: "#FFFFFF" });
@@ -40,11 +48,112 @@ create: function() {
     this.menuText.inputEnabled = true;
     this.menuText.events.onInputDown.add(this.toMenu, this);
 
+    this.map = game.add.tilemap('level_1');
+    this.map.addTilesetImage('mapa');
+    this.map.setCollisionBetween(0,900);
+    this.layer = this.map.createLayer('Capa de Patrones 1');
+    //layer.anchor.setTo(0.5);
+
+    
+
+    // transformar enemigos a instancias
+
+    for(var y = 0; y < this.map.height; ++y){
+        for(var x = 0; x < this.map.width; ++x){
+            var tile = this.map.layers[0].data[y][x];
+            if(tile != null){
+                if(tile.index == 151){
+                    // Perro
+                    this.player = new Dog(game, tile.worldX, tile.worldY);
+                    this.map.removeTile(x,y);
+                }
+                if(tile.index == 152){
+                    // Gato
+                    
+                    //var enemy1 = enemys_1.getFirstExists(false);
+                    //enemy1.reset(tile.worldX,tile.worldY);
+                    //enemy1.body.setSize(16, 16, 2, 8);
+
+                    this.map.removeTile(x,y);
+                }
+
+                if(tile.index == 158){
+                    // Cannon left
+                    
+                    //var enemy1 = enemys_1.getFirstExists(false);
+                    //enemy1.reset(tile.worldX,tile.worldY);
+                    //enemy1.body.setSize(16, 16, 2, 8);
+
+                    this.map.removeTile(x,y);
+                }
+
+                if(tile.index == 159){
+                    // Cannon right
+                    
+                    //var enemy1 = enemys_1.getFirstExists(false);
+                    //enemy1.reset(tile.worldX,tile.worldY);
+                    //enemy1.body.setSize(16, 16, 2, 8);
+
+                    this.map.removeTile(x,y);
+                }
+
+                if(tile.index == 160){
+                    // Swtich
+                    
+                    //var enemy1 = enemys_1.getFirstExists(false);
+                    //enemy1.reset(tile.worldX,tile.worldY);
+                    //enemy1.body.setSize(16, 16, 2, 8);
+
+                    this.map.removeTile(x,y);
+                }
+
+                if(tile.index == 17){
+                    // var enemy2 = enemys_2.getFirstExists(false);
+                    // enemy2.reset(tile.worldX+8,tile.worldY+6);
+                    // enemy2.body.setSize(14, 19, 0, 6);
+                    // enemy2.animations.add('walk',[0,1,0,2]);
+                    // enemy2.animations.play('walk', 10, true);
+                    // enemy2.timeto = 0;
+                    // enemy2.active = false;
+                    // if(player.position.x < enemy2.position.x ){
+                    //     enemy2.scale.x = -1.0;
+                    // }
+                    // else{
+                    //     enemy2.scale.x = +1.0;
+                    // }
+                    this.map.removeTile(x,y);
+                }
+
+                if(tile.index == 27){
+                    // var key = keys.getFirstExists(false);
+                    // key.reset(tile.worldX,tile.worldY);
+                    // key.body.setSize(16, 26, 1, 0);
+                    this.map.removeTile(x,y);
+                }
+
+                if(tile.index == 28){
+                    // var door = doors.getFirstExists(false);
+                    // door.reset(tile.worldX,tile.worldY);
+                    // door.body.setSize(64, 64, 1, 0);
+                    // door.body.immovable = true;
+                    this.map.removeTile(x,y);
+                }
+
+            }
+        }
+    }
+
+    // Creacion de cursores
+    this.cursors = game.input.keyboard.createCursorKeys();
+    this.shootButton = game.input.keyboard.addKey(Phaser.Keyboard.Z);
+    game.time.advancedTiming = true;
 },
 update: function() {
     if(game.isGamepaused){
         return;
     }
+
+    this.player.update(this.cursors,this.layer);
 
     // Update things ...
 },

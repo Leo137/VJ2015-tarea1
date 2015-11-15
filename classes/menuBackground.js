@@ -2,6 +2,7 @@ function MenuBackground(game,x,y,width, height, key, frame){
 	//Crea un background para el menu
 	this.backgroundName = isLandscape ? (isLandscapeLittle ? "bg_littlelandscape" : "bg_landscape") : "bg_portrait";
 	this.background = game.add.sprite(x,y,this.backgroundName);
+	this.background.scale.setTo(game.camera.width/this.background.width,game.camera.height/this.background.height);
 	Phaser.TileSprite.apply(this,arguments);
 	game.world.add(this);
 	if(key == 'bg_pattern_color'){
@@ -18,6 +19,7 @@ function MenuBackground(game,x,y,width, height, key, frame){
 	}
 	this.tilePosition.x = MenuBackground.xPosition;
 	this.tilePosition.y = MenuBackground.yPosition;
+	this.scale.setTo(game.camera.width/this.width,game.camera.height/this.height);	
 }
 MenuBackground.prototype = Phaser.TileSprite.prototype;
 MenuBackground.prototype.constructor = MenuBackground;
