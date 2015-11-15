@@ -43,6 +43,20 @@ BasicGame.Menu.prototype = {
 		// game.load.audio('buu', 'assets/bgm/lose_stage.ogg');
 
         game.load.audio('sfx', 'assets/sfx/fx.mp3');
+
+        
+
+        game.load.image('logo', 'assets/sprites/logo.png');
+
+        // game.load.image('money_icon', 'assets/sprites/money_icon.png');
+
+        game.load.image('sound_on', 'assets/sprites/sound_on.png');
+        game.load.image('sound_off', 'assets/sprites/sound_off.png');
+
+        // game.load.spritesheet('timer', 'assets/sprites/timer.png', 150, 20);
+    },
+    create: function() {
+
         fx = game.add.audio('sfx');
         fx.allowMultiple = true;
 
@@ -58,18 +72,7 @@ BasicGame.Menu.prototype = {
         fx.addMarker('sound_wrong', 6.813, 0.366);
         fx.addMarker('unhappy', 7.179, 0.967);
         fx.addMarker('up_short', 8.145, 0.836);
-
-        game.load.image('logo', 'assets/sprites/logo.png');
-
-        // game.load.image('money_icon', 'assets/sprites/money_icon.png');
-
-        game.load.image('sound_on', 'assets/sprites/sound_on.png');
-        game.load.image('sound_off', 'assets/sprites/sound_off.png');
-
-        // game.load.spritesheet('timer', 'assets/sprites/timer.png', 150, 20);
-    },
-    create: function() {
-
+        
         this.pieProgressPie.DestroyPie();
         this.pieProgressPie = null;
 

@@ -1,11 +1,13 @@
 var Dog = function(game, x, y) {
     Phaser.Sprite.call(this, game, x, y, 'dog');
-    this.animations.add('walk',[0,1,0,2]);
+    this.animations.add('walk',[0,1,2,1]);
     this.animations.play('walk', 10, true);
     this.anchor.setTo(0.5,0.5);
-    this.scale.setTo(0.5,0.5);    
+    this.scale.setTo(0.9);
     game.physics.enable(this, Phaser.Physics.ARCADE);
     game.world.add(this);
+    this.body.setSize(32+12, 32, 0, 16);
+
 }
 
 Dog.prototype = Object.create(Phaser.Sprite.prototype);
@@ -17,7 +19,7 @@ Dog.prototype.update = function(cursors,layer) {
 		 if (cursors.left.isDown)
 		 {
 		 	this.animations.play('walk', 10, true);
-		 	this.scale.x = 0.5;
+		 	this.scale.x = -0.9;
 		 	this.body.velocity.x -= 60;
 		 	if(this.body.velocity.x < -200){
 		 		this.body.velocity.x = -200;
@@ -26,7 +28,7 @@ Dog.prototype.update = function(cursors,layer) {
 		 else if (cursors.right.isDown)
 		 {
 		 	this.animations.play('walk', 10, true);
-		 	this.scale.x = -0.5;
+		 	this.scale.x = +0.9;
 		 	this.body.velocity.x += 60;
 		 	if(this.body.velocity.x > 200){
 		 		this.body.velocity.x = 200;
@@ -42,7 +44,7 @@ Dog.prototype.update = function(cursors,layer) {
 
 		 if(cursors.up.isDown){
 		 	
-		 	if(this.body.onFloor() && this.alive && !this.upDown){
+		 	if( (this.body.touching.down || this.body.onFloor()) && this.alive && !this.upDown){
 		 		this.holdtime = 9;
 		 		this.body.velocity.y = -250;
 		 		fx.play('numkey');

@@ -24,6 +24,9 @@ preload: function() {
 
     // Load things..
     game.load.spritesheet('dog', 'assets/sprites/player.png', 64, 64);
+    game.load.spritesheet('cat', 'assets/sprites/cat.png', 64, 64);
+    game.load.spritesheet('switches', 'assets/sprites/switches.png', 64, 64);
+    game.load.spritesheet('cannon', 'assets/sprites/cannon.png', 64, 64);
     game.load.image('mapa', 'assets/tiles/tilemap.png');
     game.load.tilemap('level_1', 'assets/maps/1.json', null, Phaser.Tilemap.TILED_JSON);
 
@@ -35,13 +38,8 @@ create: function() {
     this.pieProgressPie = null;
 
     // Create things...
-    this.gameTestText = game.add.text(game.width/2, game.height/2 - game.height/3, "Escena de juego :p :p", { font: "bold 34px Arial", fill: "#FFFFFF" });
-    this.gameTestText.anchor.set(0.5);
-    this.gameTestText.stroke =  'black';
-    this.gameTestText.strokeThickness=2;
-
-    this.menuText = game.add.text(game.width/2, game.height/2 + game.height/3, "Al Menu", { font: "bold 34px Arial", fill: "#FFFFFF" });
-    this.menuText.anchor.set(0.5);
+    this.menuText = game.add.text(game.width -10, game.height -10, "Al Menu", { font: "bold 34px Arial", fill: "#FFFFFF" });
+    this.menuText.anchor.set(1.0);
     this.menuText.stroke =  'black';
     this.menuText.strokeThickness=2;
 
@@ -54,7 +52,9 @@ create: function() {
     this.layer = this.map.createLayer('Capa de Patrones 1');
     //layer.anchor.setTo(0.5);
 
-    
+    this.catGroup = new CatGroup(game);
+    this.switchGroup = new SwitchGroup(game);
+    this.cannonGroup = new CannonGroup(game);
 
     // transformar enemigos a instancias
 
@@ -69,43 +69,31 @@ create: function() {
                 }
                 if(tile.index == 152){
                     // Gato
-                    
-                    //var enemy1 = enemys_1.getFirstExists(false);
-                    //enemy1.reset(tile.worldX,tile.worldY);
-                    //enemy1.body.setSize(16, 16, 2, 8);
+                    this.catGroup.spawn(game,tile.worldX,tile.worldY);
+                    this.map.removeTile(x,y);
+                }
 
+                if(tile.index == 160){
+                    // Switch
+                    this.switchGroup.spawn(game,tile.worldX,tile.worldY);
                     this.map.removeTile(x,y);
                 }
 
                 if(tile.index == 158){
                     // Cannon left
-                    
-                    //var enemy1 = enemys_1.getFirstExists(false);
-                    //enemy1.reset(tile.worldX,tile.worldY);
-                    //enemy1.body.setSize(16, 16, 2, 8);
-
+                    this.cannonGroup.spawnCannon(game,tile.worldX,tile.worldY,-1);
                     this.map.removeTile(x,y);
                 }
+
+
 
                 if(tile.index == 159){
                     // Cannon right
-                    
-                    //var enemy1 = enemys_1.getFirstExists(false);
-                    //enemy1.reset(tile.worldX,tile.worldY);
-                    //enemy1.body.setSize(16, 16, 2, 8);
-
+                    this.cannonGroup.spawnCannon(game,tile.worldX,tile.worldY,+1);
                     this.map.removeTile(x,y);
                 }
 
-                if(tile.index == 160){
-                    // Swtich
-                    
-                    //var enemy1 = enemys_1.getFirstExists(false);
-                    //enemy1.reset(tile.worldX,tile.worldY);
-                    //enemy1.body.setSize(16, 16, 2, 8);
-
-                    this.map.removeTile(x,y);
-                }
+                
 
                 if(tile.index == 17){
                     // var enemy2 = enemys_2.getFirstExists(false);
@@ -147,15 +135,37 @@ create: function() {
     this.cursors = game.input.keyboard.createCursorKeys();
     this.shootButton = game.input.keyboard.addKey(Phaser.Keyboard.Z);
     game.time.advancedTiming = true;
+
+    game.world.bringToTop(this.menuText);
 },
 update: function() {
     if(game.isGamepaused){
         return;
     }
-
+    // Update things ...
+    this.catGroup.update(this.layer);
+    this.switchGroup.update(this.layer);
+    this.cannonGroup.update(this.layer,this.player);
     this.player.update(this.cursors,this.layer);
 
-    // Update things ...
+    game.physics.arcade.overlap(this.catGroup, this.player, this.enemyTouchPlayer, null, this);
+    game.physics.arcade.overlap(this.switchGroup, this.player, this.playerTouchSwitch, null, this);
+    game.physics.arcade.overlap(this.cannonGroup, this.player, this.enemyTouchPlayer, null, this);
+    //game.physics.arcade.overlap(this.cannonGroup, this.layer, this.bulletTouchWall, null, this);
+
+    if(this.switchGroup.isAllSwitchesPressed()){
+        //fx.play('button_click');
+        // Next stage!
+    }
+},
+enemyTouchPlayer: function(player,enemy){
+    if(enemy.isCannon){
+        return;
+    }
+    this.player.kill();
+},
+playerTouchSwitch: function(player,switchy){
+    this.switchGroup.touch(switchy);
 },
 toMenu: function(){
     game.state.start('Menu');
