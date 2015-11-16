@@ -156,8 +156,9 @@ update: function() {
     //game.physics.arcade.overlap(this.cannonGroup, this.layer, this.bulletTouchWall, null, this);
 
     if(this.switchGroup.isAllSwitchesPressed()){
-        //fx.play('button_click');
         // Next stage!
+        levelNumber++;
+        game.state.start('Game');
     }
 },
 enemyTouchPlayer: function(player,enemy){
@@ -168,11 +169,6 @@ enemyTouchPlayer: function(player,enemy){
 },
 playerTouchSwitch: function(player,switchy){
     this.switchGroup.touch(switchy);
-    if(this.switchGroup.isAllSwitchesPressed(this.layer)){
-        levelNumber++;
-        this.preload();
-        this.create();
-    }
 },
 toMenu: function(){
     game.state.start('Menu');
