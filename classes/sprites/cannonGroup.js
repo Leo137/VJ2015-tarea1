@@ -27,9 +27,9 @@ CannonGroup.prototype.spawnCannon = function(game,x,y,direction) {
 }
 CannonGroup.prototype.spawnBullet = function(x,y,direction) {
 	var bullet = this.getFirstExists(false);
-    bullet.reset(x+direction*20,y);
-    bullet.body.setSize(64, 64, direction == -1 ? 32 : 0, 0);
-    bullet.anchor.x = direction == -1 ? 1.0 : 0.0;
+    bullet.reset(x+direction*20,y+16);
+    bullet.body.setSize(64, 64, direction == -1 ? 0 : 0, 0);
+    bullet.anchor.setTo(0.5);
     bullet.body.immovable = false;
     bullet.direction = direction;
     bullet.scale.x = bullet.direction * bullet.scale.x;
@@ -42,7 +42,7 @@ CannonGroup.prototype.update = function(layer,player) {
     var cannonGroup = this;
     game.physics.arcade.collide(this, layer);
     this.forEachExists(function(item){
-    if(item.isBullet){
+    	if(item.isBullet){
 			item.body.velocity.x = speedBullet * item.direction;
 			item.body.velocity.y = 0;
 			if(item.body.onWall()){
@@ -58,6 +58,7 @@ CannonGroup.prototype.update = function(layer,player) {
 				item.timeToFire = cannonGroup.timeToFire;
 			}
 			game.physics.arcade.collide(player,item);
+
 		}
 		
     });

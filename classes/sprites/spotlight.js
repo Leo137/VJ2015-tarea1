@@ -14,7 +14,7 @@ var Spotlight = function(game) {
    	this.spotlightWidthCeiling = 70;
    	this.spotlightWidthBase = 150;
    	this.spotlightDirection = -1;
-   	this.spotlightSpeed = -1;
+   	this.spotlightSpeed = -2;
 }
 
 Spotlight.prototype = Object.create(Phaser.BitmapData.prototype);
@@ -52,7 +52,7 @@ Spotlight.prototype.update = function() {
     this.spotlightX += this.spotlightDirection * this.spotlightSpeed;
 }
 Spotlight.prototype.isPlayerInSpotlightRegion = function(player) {
-	if(this.spotlightPoints && player.alive){
+	if(this.spotlightPoints && player.alive && !player.catMode){
 		var polygon = new Phaser.Polygon(this.spotlightPoints);
 		return polygon.contains(player.x,player.y);
 	}

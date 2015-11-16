@@ -151,7 +151,7 @@ update: function() {
     this.catGroup.update(this.layer);
     this.switchGroup.update(this.layer);
     this.cannonGroup.update(this.layer,this.player);
-    this.player.update(this.cursors,this.layer);
+    this.player.update(this.cursors,this.shootButton,this.layer);
     
 
     game.physics.arcade.overlap(this.catGroup, this.player, this.enemyTouchPlayer, null, this);
