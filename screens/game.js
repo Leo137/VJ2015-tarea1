@@ -29,6 +29,7 @@ preload: function() {
     game.load.spritesheet('cannon', 'assets/sprites/cannon.png', 64, 64);
     game.load.image('mapa', 'assets/tiles/tilemap.png');
     game.load.tilemap('level_1', 'assets/maps/1.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap('level_2', 'assets/maps/2.json', null, Phaser.Tilemap.TILED_JSON);
 
 
 },
@@ -73,23 +74,27 @@ create: function() {
                     this.map.removeTile(x,y);
                 }
 
-                if(tile.index == 160){
-                    // Switch
-                    this.switchGroup.spawn(game,tile.worldX,tile.worldY);
-                    this.map.removeTile(x,y);
-                }
-
                 if(tile.index == 158){
                     // Cannon left
                     this.cannonGroup.spawnCannon(game,tile.worldX,tile.worldY,-1);
                     this.map.removeTile(x,y);
                 }
 
-
-
                 if(tile.index == 159){
                     // Cannon right
                     this.cannonGroup.spawnCannon(game,tile.worldX,tile.worldY,+1);
+                    this.map.removeTile(x,y);
+                }
+
+                if(tile.index == 160){
+                    // Switch
+                    this.switchGroup.spawn(game,tile.worldX,tile.worldY);
+                    this.map.removeTile(x,y);
+                }
+
+                if(tile.index == 170){
+                    // Spotlight
+                    this.spotlight = new Spotlight(game);
                     this.map.removeTile(x,y);
                 }
 
@@ -147,15 +152,26 @@ update: function() {
     this.switchGroup.update(this.layer);
     this.cannonGroup.update(this.layer,this.player);
     this.player.update(this.cursors,this.layer);
+    
 
     game.physics.arcade.overlap(this.catGroup, this.player, this.enemyTouchPlayer, null, this);
     game.physics.arcade.overlap(this.switchGroup, this.player, this.playerTouchSwitch, null, this);
     game.physics.arcade.overlap(this.cannonGroup, this.player, this.enemyTouchPlayer, null, this);
-    //game.physics.arcade.overlap(this.cannonGroup, this.layer, this.bulletTouchWall, null, this);
 
     if(this.switchGroup.isAllSwitchesPressed()){
         //fx.play('button_click');
         // Next stage!
+    }
+    if(this.spotlight){
+        this.spotlight.update();
+        if(this.spotlight.isPlayerInSpotlightRegion(this.player)){
+            this.spotlight.destroySpotlight();
+            this.spotlight = null;
+            this.alert = new Alert(game);
+        }
+    }
+    if(this.alert){
+        this.alert.update();
     }
 },
 enemyTouchPlayer: function(player,enemy){
