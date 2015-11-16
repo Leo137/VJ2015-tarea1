@@ -1,5 +1,5 @@
 BasicGame.Game = function(){ }; 
-
+var levelNumber = 1;
 BasicGame.Game.prototype = { 
 
 loadUpdate : function(){
@@ -27,8 +27,10 @@ preload: function() {
     game.load.spritesheet('cat', 'assets/sprites/cat.png', 64, 64);
     game.load.spritesheet('switches', 'assets/sprites/switches.png', 64, 64);
     game.load.spritesheet('cannon', 'assets/sprites/cannon.png', 64, 64);
+    //Cargar Laser
+
     game.load.image('mapa', 'assets/tiles/tilemap.png');
-    game.load.tilemap('level_1', 'assets/maps/1.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap('level_'+levelNumber.toString(), 'assets/maps/'+levelNumber+'.json', null, Phaser.Tilemap.TILED_JSON);
 
 
 },
@@ -46,7 +48,7 @@ create: function() {
     this.menuText.inputEnabled = true;
     this.menuText.events.onInputDown.add(this.toMenu, this);
 
-    this.map = game.add.tilemap('level_1');
+    this.map = game.add.tilemap('level_'+levelNumber.toString());
     this.map.addTilesetImage('mapa');
     this.map.setCollisionBetween(0,900);
     this.layer = this.map.createLayer('Capa de Patrones 1');
@@ -166,6 +168,11 @@ enemyTouchPlayer: function(player,enemy){
 },
 playerTouchSwitch: function(player,switchy){
     this.switchGroup.touch(switchy);
+    if(this.switchGroup.isAllSwitchesPressed(this.layer)){
+        levelNumber++;
+        this.preload();
+        this.create();
+    }
 },
 toMenu: function(){
     game.state.start('Menu');
