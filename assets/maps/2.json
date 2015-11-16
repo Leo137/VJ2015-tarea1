@@ -1,0 +1,44 @@
+{ "height":20,
+ "layers":[
+        {
+         "compression":"zlib",
+         "data":"eJy1VNEKwjAMzOP0UX10fdo\/WxSln+oKDYQjSdM6Awely90lzdqViFYD1wbrewSV\/yA7Ljtubf1siEYRGqeGc8djNqoGn0Xa8Q56LKI2iZk6uQbk8j5C09I8sqKVDvTAM9B4i6Ef9dDqQ979Dx5Hz6PWqN2j3jysPM0jEjiPHn\/GA3tA\/gvWnod1z7wZaByvVzkb721MBge53ltAnX57Id8rrmlzPMqgfhng\/tqHx92CeRGPj5OTwSM7uchjDzlzC\/hvjKDyvtWaGug=",
+         "encoding":"base64",
+         "height":20,
+         "name":"Capa de Patrones 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":25,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "properties":
+    {
+
+    },
+ "renderorder":"right-down",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "image":"..\/tiles\/tilemap.png",
+         "imageheight":512,
+         "imagewidth":320,
+         "margin":0,
+         "name":"tilemap",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tilecount":160,
+         "tileheight":32,
+         "tilewidth":32
+        }],
+ "tilewidth":32,
+ "version":1,
+ "width":25
+}
