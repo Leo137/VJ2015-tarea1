@@ -1,5 +1,6 @@
 BasicGame.Game = function(){ }; 
 var levelNumber = 1;
+var timeLeft = 300;
 BasicGame.Game.prototype = { 
 
 loadUpdate : function(){
@@ -21,12 +22,14 @@ preload: function() {
 
     //this.setLoadingText();
     game.time.advancedTiming = true;
+    //game.physics.arcade.TILE_BIAS = 8;
 
     // Load things..
     game.load.spritesheet('dog', 'assets/sprites/player.png', 64, 64);
     game.load.spritesheet('cat', 'assets/sprites/cat.png', 64, 64);
     game.load.spritesheet('switches', 'assets/sprites/switches.png', 64, 64);
     game.load.spritesheet('cannon', 'assets/sprites/cannon.png', 64, 64);
+    game.load.spritesheet('laser', 'assets/sprites/laser.png', 64, 64);
     //Cargar Laser
 
     game.load.image('mapa', 'assets/tiles/tilemap.png');
@@ -57,6 +60,8 @@ create: function() {
     this.catGroup = new CatGroup(game);
     this.switchGroup = new SwitchGroup(game);
     this.cannonGroup = new CannonGroup(game);
+    this.laserGroup = new LaserGroup(game,this.layer,this.map);
+    this.timer = new Timer(game,game.width-50,50);
 
     // transformar enemigos a instancias
 
@@ -74,6 +79,31 @@ create: function() {
                     this.catGroup.spawn(game,tile.worldX,tile.worldY);
                     this.map.removeTile(x,y);
                 }
+
+                if(tile.index == 154){
+                    // Laser vDown
+                    this.laserGroup.spawnLaser(game,tile.worldX,tile.worldY,true,1,-1);
+                    this.map.removeTile(x,y);
+                }
+
+                if(tile.index == 155){
+                    // Laser vUp
+                    this.laserGroup.spawnLaser(game,tile.worldX,tile.worldY,true,1,1);
+                    this.map.removeTile(x,y);
+                }
+
+                if(tile.index == 156){
+                    // Laser hLeft
+                    this.laserGroup.spawnLaser(game,tile.worldX,tile.worldY,false,-1,1);
+                    this.map.removeTile(x,y);
+                }
+
+                if(tile.index == 157){
+                    // Laser hRight
+                    this.laserGroup.spawnLaser(game,tile.worldX,tile.worldY,false,1,1);
+                    this.map.removeTile(x,y);
+                }
+
 
                 if(tile.index == 158){
                     // Cannon left
@@ -143,6 +173,7 @@ create: function() {
     game.time.advancedTiming = true;
 
     game.world.bringToTop(this.menuText);
+    game.world.bringToTop(this.timer);
 },
 update: function() {
     if(game.isGamepaused){
@@ -152,16 +183,27 @@ update: function() {
     this.catGroup.update(this.layer);
     this.switchGroup.update(this.layer);
     this.cannonGroup.update(this.layer,this.player);
+    this.laserGroup.update(this.layer,this.player);
     this.player.update(this.cursors,this.shootButton,this.layer);
+    this.timer.update();
     
 
     game.physics.arcade.overlap(this.catGroup, this.player, this.enemyTouchPlayer, null, this);
     game.physics.arcade.overlap(this.switchGroup, this.player, this.playerTouchSwitch, null, this);
     game.physics.arcade.overlap(this.cannonGroup, this.player, this.enemyTouchPlayer, null, this);
+    game.physics.arcade.overlap(this.laserGroup, this.player, this.enemyTouchPlayer, null, this);
 
     if(this.switchGroup.isAllSwitchesPressed()){
         // Next stage!
         levelNumber++;
+        if(this.spotlight){
+            this.spotlight.destroySpotlight();
+            this.spotlight = null;
+        }
+        if(this.alert){
+            this.alert.destroyAlert();
+            this.alert = null;
+        }
         game.state.start('Game');
     }
     if(this.spotlight){
@@ -178,6 +220,9 @@ update: function() {
 },
 enemyTouchPlayer: function(player,enemy){
     if(enemy.isCannon){
+        return;
+    }
+    if(enemy.isLaser){
         return;
     }
     this.player.kill();

@@ -6,7 +6,7 @@ var Dog = function(game, x, y) {
     this.scale.setTo(0.9);
     game.physics.enable(this, Phaser.Physics.ARCADE);
     game.world.add(this);
-    this.body.setSize(32+12, 32, 0, 16);
+    this.body.setSize(32+12, 12, 0, 20);
 
 }
 
