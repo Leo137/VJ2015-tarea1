@@ -1,6 +1,7 @@
 BasicGame.Game = function(){ }; 
 var levelNumber = 1;
-var timeLeft = 300;
+var timeLeft = 300 * 1000;
+
 BasicGame.Game.prototype = { 
 
 loadUpdate : function(){
@@ -22,7 +23,6 @@ preload: function() {
 
     //this.setLoadingText();
     game.time.advancedTiming = true;
-    //game.physics.arcade.TILE_BIAS = 8;
 
     // Load things..
     game.load.spritesheet('dog', 'assets/sprites/player.png', 64, 64);
@@ -30,13 +30,11 @@ preload: function() {
     game.load.spritesheet('switches', 'assets/sprites/switches.png', 64, 64);
     game.load.spritesheet('cannon', 'assets/sprites/cannon.png', 64, 64);
     game.load.spritesheet('laser', 'assets/sprites/laser.png', 64, 64);
-    //Cargar Laser
 
     game.load.image('mapa', 'assets/tiles/tilemap.png');
     game.load.tilemap('level_'+levelNumber.toString(), 'assets/maps/'+levelNumber+'.json', null, Phaser.Tilemap.TILED_JSON);
-
-
 },
+
 create: function() {
 
     this.pieProgressPie.DestroyPie();
@@ -60,7 +58,7 @@ create: function() {
     this.catGroup = new CatGroup(game);
     this.switchGroup = new SwitchGroup(game);
     this.cannonGroup = new CannonGroup(game);
-    this.laserGroup = new LaserGroup(game,this.layer,this.map);
+    this.laserGroup = new LaserGroup(game,this.map);
     this.timer = new Timer(game,game.width-50,50);
 
     // transformar enemigos a instancias
@@ -72,6 +70,8 @@ create: function() {
                 if(tile.index == 151){
                     // Perro
                     this.player = new Dog(game, tile.worldX, tile.worldY);
+                    this.playerOrigpositionX = tile.worldX;
+                    this.playerOrigpositionY = tile.worldY;
                     this.map.removeTile(x,y);
                 }
                 if(tile.index == 152){
@@ -82,14 +82,16 @@ create: function() {
 
                 if(tile.index == 154){
                     // Laser vDown
-                    this.laserGroup.spawnLaser(game,tile.worldX,tile.worldY,true,1,-1);
+                    var laser = this.laserGroup.spawnLaser(game,tile.worldX,tile.worldY,true,1,-1);
                     this.map.removeTile(x,y);
+                    this.laserGroup.createBeam(laser,tile.worldX,tile.worldY,true,1,-1);
                 }
 
                 if(tile.index == 155){
                     // Laser vUp
-                    this.laserGroup.spawnLaser(game,tile.worldX,tile.worldY,true,1,1);
+                    var laser = this.laserGroup.spawnLaser(game,tile.worldX,tile.worldY,true,1,1);
                     this.map.removeTile(x,y);
+                    this.laserGroup.createBeam(laser,tile.worldX,tile.worldY,true,1,1);
                 }
 
                 if(tile.index == 156){
@@ -128,41 +130,6 @@ create: function() {
                     this.spotlight = new Spotlight(game);
                     this.map.removeTile(x,y);
                 }
-
-                
-
-                if(tile.index == 17){
-                    // var enemy2 = enemys_2.getFirstExists(false);
-                    // enemy2.reset(tile.worldX+8,tile.worldY+6);
-                    // enemy2.body.setSize(14, 19, 0, 6);
-                    // enemy2.animations.add('walk',[0,1,0,2]);
-                    // enemy2.animations.play('walk', 10, true);
-                    // enemy2.timeto = 0;
-                    // enemy2.active = false;
-                    // if(player.position.x < enemy2.position.x ){
-                    //     enemy2.scale.x = -1.0;
-                    // }
-                    // else{
-                    //     enemy2.scale.x = +1.0;
-                    // }
-                    this.map.removeTile(x,y);
-                }
-
-                if(tile.index == 27){
-                    // var key = keys.getFirstExists(false);
-                    // key.reset(tile.worldX,tile.worldY);
-                    // key.body.setSize(16, 26, 1, 0);
-                    this.map.removeTile(x,y);
-                }
-
-                if(tile.index == 28){
-                    // var door = doors.getFirstExists(false);
-                    // door.reset(tile.worldX,tile.worldY);
-                    // door.body.setSize(64, 64, 1, 0);
-                    // door.body.immovable = true;
-                    this.map.removeTile(x,y);
-                }
-
             }
         }
     }
@@ -175,6 +142,7 @@ create: function() {
     game.world.bringToTop(this.menuText);
     game.world.bringToTop(this.timer);
 },
+
 update: function() {
     if(game.isGamepaused){
         return;
@@ -187,11 +155,12 @@ update: function() {
     this.player.update(this.cursors,this.shootButton,this.layer);
     this.timer.update();
     
-
-    game.physics.arcade.overlap(this.catGroup, this.player, this.enemyTouchPlayer, null, this);
-    game.physics.arcade.overlap(this.switchGroup, this.player, this.playerTouchSwitch, null, this);
-    game.physics.arcade.overlap(this.cannonGroup, this.player, this.enemyTouchPlayer, null, this);
-    game.physics.arcade.overlap(this.laserGroup, this.player, this.enemyTouchPlayer, null, this);
+    if(this.player && this.player.alive){
+        game.physics.arcade.overlap(this.catGroup, this.player, this.enemyTouchPlayer, null, this);
+        game.physics.arcade.overlap(this.switchGroup, this.player, this.playerTouchSwitch, null, this);
+        game.physics.arcade.overlap(this.cannonGroup, this.player, this.enemyTouchPlayer, null, this);
+        game.physics.arcade.overlap(this.laserGroup, this.player, this.enemyTouchPlayer, null, this);
+    }
 
     if(this.switchGroup.isAllSwitchesPressed()){
         // Next stage!
@@ -219,6 +188,7 @@ update: function() {
     }
 },
 enemyTouchPlayer: function(player,enemy){
+    console.log('asd');
     if(enemy.isCannon){
         return;
     }
@@ -226,6 +196,7 @@ enemyTouchPlayer: function(player,enemy){
         return;
     }
     this.player.kill();
+    this.player = new Dog(game, this.playerOrigpositionX, this.playerOrigpositionY);
 },
 playerTouchSwitch: function(player,switchy){
     this.switchGroup.touch(switchy);

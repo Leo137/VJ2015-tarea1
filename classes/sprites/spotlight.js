@@ -11,8 +11,8 @@ var Spotlight = function(game) {
     this.rayBitmapImage.visible = true;
 
     this.spotlightX = game.width;
-   	this.spotlightWidthCeiling = 70;
-   	this.spotlightWidthBase = 150;
+   	this.spotlightWidthCeiling = 30;
+   	this.spotlightWidthBase = 80;
    	this.spotlightDirection = -1;
    	this.spotlightSpeed = -2;
 }

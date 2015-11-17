@@ -9,7 +9,7 @@ var Alert = function(game) {
 
     this.rayBitmapImage = game.add.image(0, 0, this);
     this.rayBitmapImage.visible = true;
-    this.alertPeriod = 10.0;
+    this.alertPeriod = 8.0;
     this.actualTime = 0.0;
 }
 

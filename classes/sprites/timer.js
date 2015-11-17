@@ -5,7 +5,6 @@ var Timer = function(game,x,y) {
     this.stroke =  'black';
     this.strokeThickness=2;
 	this.fontSize = 32;
-	this.timeLeft = 300 * 1000;
 	this.a = game.time.time;
 }
 
@@ -15,13 +14,15 @@ Timer.prototype.update = function() {
 
 	this.b = game.time.time;
 
-	this.timeLeft = 300 * 1000 - (this.b - this.a);
+	timeLeft -= (this.b - this.a);
 
-	this.minutes = Math.floor(this.timeLeft / 60000) % 60;
+	this.a = game.time.time;
+
+	this.minutes = Math.floor(timeLeft / 60000) % 60;
  
-    this.seconds = Math.floor(this.timeLeft / 1000) % 60;
+    this.seconds = Math.floor(timeLeft / 1000) % 60;
  
-    this.milliseconds = Math.floor(this.timeLeft) % 100;
+    this.milliseconds = Math.floor(timeLeft) % 100;
  
     //If any of the digits becomes a single digit number, pad it with a zero
     if (this.milliseconds < 10)
