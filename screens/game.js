@@ -1,6 +1,7 @@
 BasicGame.Game = function(){ }; 
 var levelNumber = 1;
 var timeLeft = 300 * 1000;
+var music;
 
 BasicGame.Game.prototype = { 
 
@@ -31,6 +32,8 @@ preload: function() {
     game.load.spritesheet('cannon', 'assets/sprites/cannon.png', 64, 64);
     game.load.spritesheet('laser', 'assets/sprites/laser.png', 64, 64);
 
+    game.load.audio('musica', ['assets/music/music.wav', 'assets/music/music.ogg']);
+
     game.load.image('mapa', 'assets/tiles/tilemap.png');
     game.load.tilemap('level_'+levelNumber.toString(), 'assets/maps/'+levelNumber+'.json', null, Phaser.Tilemap.TILED_JSON);
 },
@@ -39,6 +42,9 @@ create: function() {
 
     this.pieProgressPie.DestroyPie();
     this.pieProgressPie = null;
+
+    music = game.add.audio('musica');
+    music.play();
 
     // Create things...
     this.menuText = game.add.text(game.width -10, game.height -10, "Al Menu", { font: "bold 34px Arial", fill: "#FFFFFF" });
