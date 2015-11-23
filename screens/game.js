@@ -43,6 +43,10 @@ create: function() {
     this.pieProgressPie.DestroyPie();
     this.pieProgressPie = null;
 
+    if(music){
+        music.stop();
+        music.destroy();
+    }
     music = game.add.audio('musica');
     music.play();
 
