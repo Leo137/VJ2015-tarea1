@@ -179,6 +179,11 @@ update: function() {
     if(this.switchGroup.isAllSwitchesPressed()){
         // Next stage!
         levelNumber++;
+        if(levelNumber == 4){
+            this.toGameover();
+            levelNumber = 0;
+            return;
+        }
         if(this.spotlight){
             this.spotlight.destroySpotlight();
             this.spotlight = null;
