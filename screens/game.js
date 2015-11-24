@@ -1,5 +1,5 @@
 BasicGame.Game = function(){ }; 
-var levelNumber = 1;
+var levelNumber = 0;
 var timeLeft = 300 * 1000;
 var music;
 
