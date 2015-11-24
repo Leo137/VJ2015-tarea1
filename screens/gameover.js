@@ -11,11 +11,11 @@ loadUpdate: function(){
 },
 create: function() {
 
-    if (levelNumber == 4){
-        this.gameoverText = game.add.text(game.width/2, game.height/2, 'GAME OVER', { font: "bold 34px Arial", fill: "#ff0044" });
+    if (timeLeft > 0){
+        this.gameoverText = game.add.text(game.width/2, game.height/2, 'HAZ LOGRADO ESCAPAR DE LOS GATOS!', { font: "bold 34px Arial", fill: "#ff0044" });
     }
     else{
-        this.gameoverText = game.add.text(game.width/2, game.height/2, 'HAZ LOGRADO ESCAPAR DE LOS GATOS!', { font: "bold 34px Arial", fill: "#ff0044" });
+        this.gameoverText = game.add.text(game.width/2, game.height/2, 'GAME OVER!!', { font: "bold 34px Arial", fill: "#ff0044" });
     }
     this.gameoverText.anchor.set(0.5);
     this.gameoverText.stroke =  'black';
