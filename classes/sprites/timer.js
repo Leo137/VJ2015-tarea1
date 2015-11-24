@@ -18,6 +18,11 @@ Timer.prototype.update = function() {
 
 	this.a = game.time.time;
 
+    if(timeLeft <= 0){
+        this.setText('00' + ':'+ '00' + ':' + '00');
+        return;
+    }
+
 	this.minutes = Math.floor(timeLeft / 60000) % 60;
  
     this.seconds = Math.floor(timeLeft / 1000) % 60;

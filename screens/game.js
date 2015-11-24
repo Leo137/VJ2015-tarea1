@@ -157,6 +157,9 @@ update: function() {
     if(game.isGamepaused){
         return;
     }
+    if(timeLeft <= 0){
+        this.toGameover();
+    }
     // Update things ...
     this.catGroup.update(this.layer);
     this.switchGroup.update(this.layer);
@@ -172,10 +175,7 @@ update: function() {
         game.physics.arcade.overlap(this.laserGroup, this.player, this.enemyTouchPlayer, null, this);
     }
 
-    if(timeLeft == 0){
-        this.toGameover();
-    }
-
+    
     if(this.switchGroup.isAllSwitchesPressed()){
         // Next stage!
         levelNumber++;
