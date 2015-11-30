@@ -1,5 +1,5 @@
 BasicGame.Game = function(){ }; 
-var levelNumber = 0;
+var levelNumber = 1;
 var timeLeft = 300 * 1000;
 var music;
 
@@ -181,7 +181,7 @@ update: function() {
         levelNumber++;
         if(levelNumber == 4){
             this.toGameover();
-            levelNumber = 0;
+            levelNumber = 1;
             return;
         }
         if(this.spotlight){
